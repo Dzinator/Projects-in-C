@@ -1,0 +1,27 @@
+Two files created with zero length:
+
+---------------------------------
+  -[File Name]-	       -[Size]-
+---------------------------------
+
+   VESTYARR.UBD	              0
+   MJLGJTFH.COR	              0
+---------------------------------
+
+
+File VESTYARR.UBD now has length 17927 and MJLGJTFH.COR now has length 16103:
+
+---------------------------------
+  -[File Name]-	       -[Size]-
+---------------------------------
+
+   VESTYARR.UBD	          17927
+   MJLGJTFH.COR	          16103
+---------------------------------
+
+Created 98 files in the root directory
+Simultaneously opened 98 files
+Trying to fill up the disk with repeated writes to JWOAQYDW.TUI.
+(This may take a while).
+Write failed after 40 iterations.
+If the emulated disk contains just over 40960 bytes, this is OK

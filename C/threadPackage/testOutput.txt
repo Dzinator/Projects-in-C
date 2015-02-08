@@ -1,0 +1,151 @@
+
+TESTING DINING PHILOSOPHERS!
+Let them think!
+
+Current Threads:
+1)  main  [Running]  0 microseconds
+2)  Socrates (1)  [Runnable]  0 microseconds
+3)  Plato (2)  [Runnable]  0 microseconds
+4)  Descartes (3)  [Runnable]  0 microseconds
+5)  Hegel (4)  [Runnable]  0 microseconds
+6)  Camus (5)  [Runnable]  0 microseconds
+Total: 6 thread(s) and 5 semaphores.
+
+Philosopher 0 starts to eat.
+Philosopher 2 starts to eat.
+Philosopher 0 has finished eating.
+Philosopher 0 starts to think.
+Philosopher 2 has finished eating.
+Philosopher 2 starts to think.
+Philosopher 4 starts to eat.
+Philosopher 1 starts to eat.
+Philosopher 4 has finished eating.
+Philosopher 4 starts to think.
+Philosopher 1 has finished eating.
+Philosopher 1 starts to think.
+Philosopher 0 has finished thinking.
+Philosopher 0 starts to eat.
+Philosopher 2 has finished thinking.
+Philosopher 3 starts to eat.
+Philosopher 2 starts to eat.
+Philosopher 0 has finished eating.
+Philosopher 0 starts to think.
+Philosopher 3 has finished eating.
+Philosopher 3 starts to think.
+Philosopher 1 has finished thinking.
+Philosopher 2 has finished eating.
+Philosopher 2 starts to think.
+Philosopher 4 has finished thinking.
+Philosopher 4 starts to eat.
+Philosopher 1 starts to eat.
+Philosopher 0 has finished thinking.
+Philosopher 4 has finished eating.
+Philosopher 4 starts to think.
+Philosopher 2 has finished thinking.
+Philosopher 3 has finished thinking.
+Philosopher 3 starts to eat.
+Philosopher 0 starts to eat.
+Philosopher 1 has finished eating.
+Philosopher 1 starts to think.
+Philosopher 3 has finished eating.
+Philosopher 3 starts to think.
+Philosopher 0 has finished eating.
+Philosopher 0 starts to think.
+Philosopher 2 starts to eat.
+Philosopher 1 has finished thinking.
+Philosopher 1 starts to eat.
+Philosopher 4 has finished thinking.
+Philosopher 4 starts to eat.
+Philosopher 2 has finished eating.
+Philosopher 2 starts to think.
+Philosopher 3 has finished thinking.
+Philosopher 0 has finished thinking.
+Philosopher 1 has finished eating.
+Philosopher 1 starts to think.
+Philosopher 4 has finished eating.
+Philosopher 4 starts to think.
+Philosopher 3 starts to eat.
+Philosopher 0 starts to eat.
+Philosopher 2 has finished thinking.
+Philosopher 2 starts to eat.
+Philosopher 1 has finished thinking.
+Philosopher 3 has finished eating.
+Philosopher 3 starts to think.
+Philosopher 4 has finished thinking.
+Philosopher 0 has finished eating.
+Philosopher 0 starts to think.
+Philosopher 2 has finished eating.
+Philosopher 2 starts to think.
+Philosopher 4 starts to eat.
+Philosopher 1 starts to eat.
+Philosopher 3 has finished thinking.
+Philosopher 0 has finished thinking.
+Philosopher 1 has finished eating.
+Philosopher 1 starts to think.
+Philosopher 2 has finished thinking.
+Philosopher 3 starts to eat.
+Philosopher 4 has finished eating.
+Philosopher 4 starts to think.
+Philosopher 2 starts to eat.
+Philosopher 0 starts to eat.
+Philosopher 3 has finished eating.
+Philosopher 3 starts to think.
+Philosopher 4 has finished thinking.
+Philosopher 1 has finished thinking.
+Philosopher 4 starts to eat.
+Philosopher 2 has finished eating.
+Philosopher 2 starts to think.
+Philosopher 1 starts to eat.
+Philosopher 0 has finished eating.
+Philosopher 0 starts to think.
+Philosopher 4 has finished eating.
+Philosopher 4 starts to think.
+Philosopher 3 has finished thinking.
+Philosopher 3 starts to eat.
+Philosopher 1 has finished eating.
+Philosopher 1 starts to think.
+Philosopher 2 has finished thinking.
+Philosopher 3 has finished eating.
+Philosopher 3 starts to think.
+Philosopher 4 has finished thinking.
+Philosopher 4 starts to eat.
+Philosopher 2 starts to eat.
+Philosopher 0 has finished thinking.
+Philosopher 1 has finished thinking.
+Philosopher 4 has finished eating.
+Philosopher 4 starts to think.
+Philosopher 2 has finished eating.
+Philosopher 2 starts to think.
+Philosopher 3 has finished thinking.
+Philosopher 3 starts to eat.
+Philosopher 1 starts to eat.
+Philosopher 0 starts to eat.
+Philosopher 3 has finished eating.
+Philosopher 3 starts to think.
+Philosopher 1 has finished eating.
+Philosopher 1 starts to think.
+Philosopher 0 has finished eating.
+Philosopher 0 starts to think.
+Philosopher 2 has finished thinking.
+Philosopher 2 leaves the diner.
+Philosopher 4 has finished thinking.
+Philosopher 4 leaves the diner.
+Philosopher 1 has finished thinking.
+Philosopher 1 leaves the diner.
+Philosopher 0 has finished thinking.
+Philosopher 0 leaves the diner.
+Philosopher 3 has finished thinking.
+Philosopher 3 leaves the diner.
+The dinner is done
+
+Current Threads:
+1)  main  [Running]  272000 microseconds
+2)  Socrates (1)  [Exited]  37000 microseconds
+3)  Plato (2)  [Exited]  39000 microseconds
+4)  Descartes (3)  [Exited]  38000 microseconds
+5)  Hegel (4)  [Exited]  36000 microseconds
+6)  Camus (5)  [Exited]  35000 microseconds
+Total: 6 thread(s) and 5 semaphores.
+
+Destroying semaphores
+Finished.

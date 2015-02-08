@@ -1,0 +1,412 @@
+#include <signal.h>
+#include <slack/list.h>
+#include <slack/std.h>
+#include <stdio.h>
+#include <stdlib.h>
+#include <time.h>
+#include <ucontext.h>
+#include <string.h>
+#include <sys/time.h>
+#include "util.h"
+
+#define THREAD_MAX_NUMBER 100
+#define SEMAPHORE_MAX_NUMBER 100
+
+//Fields declarations
+int nbThreads, semaphoreCount;
+
+int executingThread;
+
+List* runQueue;
+
+mythread_control_block* threadControlTable;
+semaphore* semaphoreTable;
+
+//timer for the scheduler
+struct itimerval tval;
+
+//this variable will hold the current quantum in nanoseconds
+int turnDuration;
+
+//set of signals
+sigset_t sset, oldset;
+
+//for testing purposes
+int sem1;
+int sem2;
+
+
+int mythread_init()
+{
+	nbThreads = semaphoreCount = 0;
+	runQueue = list_create(NULL); 
+	int i;
+	/*THREAD CONTROL TABLE INITIALIZATION*/ 
+	ucontext_t mainContext;
+	threadControlTable = (mythread_control_block *) calloc(THREAD_MAX_NUMBER, sizeof(mythread_control_block)); 
+	//I initialize all the thread IDs to -1 to show that they're empty
+	for(i = 1; i < THREAD_MAX_NUMBER; i++) threadControlTable[i].thread_id = -1;
+	//SLOT ZERO IS NOT USED AND SERVES AS AN EMPTY RUNQUEUE FLAG
+	threadControlTable[0].thread_id = 0;
+	//I use slot 0 to store the main thread
+	getcontext(&mainContext);
+	threadControlTable[1].thread_id = 1;
+	threadControlTable[1].threadCPUTime = 0;
+	threadControlTable[1].context = mainContext;
+	threadControlTable[1].thread_name = "Thread_Package";
+	threadControlTable[1].state = RUNNING;
+
+
+	//SEMAPHORE TABLE INITIALIZATION
+	semaphoreTable = (semaphore *) calloc(SEMAPHORE_MAX_NUMBER, sizeof(semaphore)); 
+	for(i = 0; i < SEMAPHORE_MAX_NUMBER; i++) semaphoreTable[i].isUsed = 0;
+
+	//TIMER INITIALIZATION
+	tval.it_interval.tv_sec = 0;
+	tval.it_interval.tv_usec = 100;
+	tval.it_value.tv_sec = 0;
+	tval.it_value.tv_usec = 100;
+	//default quantum
+	turnDuration = 100;
+	
+
+	//empty the set and add SIGALRM to it
+	sigemptyset(&sset);
+	sigaddset(&sset, SIGALRM);
+
+	return 0;
+
+
+}
+
+int mythread_create(char *threadname, void (*threadfunc)(), int stacksize, int arg)
+{
+
+	ucontext_t context;
+
+	//Look for an available spot in the thread block table, if its full it will stay -1
+	int i;
+	int createdThread = -1;
+	for(i = 2; i < THREAD_MAX_NUMBER; i++)
+	{
+		if(threadControlTable[i].thread_id == -1)
+		{
+			//create a thread block initialized to appropriate fields
+			threadControlTable[i].thread_id = i;
+			threadControlTable[i].threadCPUTime = 0;
+			threadControlTable[i].thread_name = threadname;
+			threadControlTable[i].state = RUNNABLE;
+			createdThread = i;
+			break;
+		}
+	}
+
+	//Error if table is full
+	if(createdThread < 0)
+	{
+		perror("Thread Package Error: Maximum number of threads reached.");
+		return -1;
+	}
+
+	nbThreads++;
+	//saves current context in context
+	getcontext(&context);
+	//adjust stack properties
+	context.uc_stack.ss_sp = (char *) calloc(stacksize, sizeof(char));
+	context.uc_stack.ss_size = stacksize;
+	//make a context that starts at thread func
+	makecontext(&context, threadfunc, 1, arg);
+	threadControlTable[createdThread].context = context;
+
+	//Add newly created thread to run queue
+	runQueue = list_append_int(runQueue, createdThread);
+
+	return createdThread;
+
+}
+
+void mythread_exit()
+{
+	
+	int exitingThread = executingThread;
+	executingThread = list_shift_int(runQueue);
+	//adjust the states of the threads
+	threadControlTable[executingThread].state = RUNNING;
+	threadControlTable[exitingThread].state = EXIT;
+	//update the CPU time
+	threadControlTable[exitingThread].threadCPUTime += turnDuration;
+	//Check if the runqueue is empty
+	if(executingThread == 0)
+	{
+		printf("Thread Package Error: No more runnable threads.\n");
+		exit(EXIT_FAILURE);
+	}
+
+	// mythread_control_block b = threadControlTable[executingThread];
+	swapcontext(&threadControlTable[exitingThread].context, &threadControlTable[executingThread].context);
+
+}
+
+void runthreads()
+{
+	//switches control to created threads 
+    	int sigset();
+    	sigset(SIGALRM, switcher);
+	setitimer(ITIMER_REAL, &tval, 0);
+
+	switcher();
+	//activates the Thread Switcher (triggers context switch every QUANTUM nanoseconds)
+}
+
+void set_quantum_size(int quantum)
+{
+	//sets the quantum size of the round robin scheduler
+	double q = ((double) quantum);
+
+	turnDuration = (int)q;
+
+	tval.it_interval.tv_sec = 0;
+	tval.it_interval.tv_usec = q;
+	tval.it_value.tv_sec = 0;
+	tval.it_value.tv_usec = q;
+
+
+
+}
+
+int create_semaphore(int value)
+{
+	if(value < 0)
+	{
+		//value of semaphore connot be negative, we return error (-1)
+		perror("Thread Package Error: Impossible to create a negative semaphore.\n");
+		return -1;
+	}
+	else
+	{
+		int i;
+		for(i = 0; i < SEMAPHORE_MAX_NUMBER; i++)
+		{
+			if(semaphoreTable[i].isUsed == 0)
+			{
+				//create a semaphore initialized to value
+				semaphoreTable[i].isUsed = 1;
+				semaphoreTable[i].count = value;
+				semaphoreTable[i].initialCount = value;
+				semaphoreTable[i].waitQueue = list_create(NULL);
+				semaphoreCount++;
+				return i;
+			}
+		}
+	}
+	
+
+	return -1;
+
+}
+
+void semaphore_wait(int sem)
+{
+	if(semaphoreTable[sem].isUsed == 0 || sem >= SEMAPHORE_MAX_NUMBER || sem < 0) 
+	{
+		perror("Thread Package Error: Not a valid semaphore.\n");
+		return;
+	}
+	else
+	{
+		//block signals
+		sigprocmask(SIG_BLOCK, &sset, &oldset);
+
+		semaphoreTable[sem].count--;
+		if(semaphoreTable[sem].count < 0)
+		{
+			semaphoreTable[sem].waitQueue = list_append_int(semaphoreTable[sem].waitQueue, executingThread);
+			//update thread control table
+			threadControlTable[executingThread].state = WAIT;
+
+			sigprocmask(SIG_SETMASK, &oldset, 0);
+
+			//swap context
+			int waitingThread = executingThread;
+			executingThread = list_shift_int(runQueue);
+			threadControlTable[executingThread].state = RUNNING;
+
+			threadControlTable[waitingThread].threadCPUTime += turnDuration;
+			
+			//Check if the runqueue is empty
+			if(executingThread == 0)
+			{
+				printf("Thread Package Error: No more runnable threads.\n");
+				exit(EXIT_FAILURE);
+			}
+
+			swapcontext(&threadControlTable[waitingThread].context, &threadControlTable[executingThread].context);
+		}
+
+	}
+
+
+}
+
+void semaphore_signal(int sem)
+{
+	if(semaphoreTable[sem].isUsed == 0 || sem >= SEMAPHORE_MAX_NUMBER || sem < 0)
+	{
+		perror("Thread Package Error: Not a valid semaphore.\n");
+		return;
+	}
+
+
+	sigprocmask(SIG_BLOCK, &sset, &oldset);
+
+	if(semaphoreTable[sem].count < 0)
+	{
+		semaphoreTable[sem].count++;
+		int resumingThread = list_shift_int(semaphoreTable[sem].waitQueue);
+		semaphoreTable[sem].waitQueue = list_append_int(runQueue, resumingThread);
+		// update thread control table
+
+		threadControlTable[resumingThread].state = RUNNABLE;
+	}
+	else semaphoreTable[sem].count++;
+
+	sigprocmask(SIG_SETMASK, &oldset, 0);
+}
+
+
+void destroy_semaphore(int sem)
+{
+	sigprocmask(SIG_BLOCK, &sset, &oldset);
+	//verification
+	if(semaphoreTable[sem].count < 0)
+	{
+		perror("Thread Package Error: Semaphore can't be deleted because threads are waiting on it\n");
+	}
+	else
+	{
+		if(semaphoreTable[sem].count != semaphoreTable[sem].initialCount) 
+		{
+			perror("Thread Package Error: The value of this semaphore has changed\n");
+		}
+		semaphoreTable[sem].isUsed = 0;
+		semaphoreTable[sem].count = 0;
+		semaphoreTable[sem].initialCount = 0;
+		free(semaphoreTable[sem].waitQueue);
+		semaphoreTable[sem].waitQueue = list_create(NULL);
+		semaphoreCount--;
+	}
+
+	sigprocmask(SIG_SETMASK, &oldset, 0);
+}
+
+void mythread_state()
+{
+	//
+	printf("\nCurrent Threads:\n");
+	int i;
+	for(i = 1; i < THREAD_MAX_NUMBER; i++)
+	{
+		if(threadControlTable[i].thread_id != -1)
+		{
+			//create a thread block initialized to appropriate fields
+			char* s = toString(threadControlTable[i].state);
+			printf("%d)  %s  [%s]  %lu microseconds\n",threadControlTable[i].thread_id, threadControlTable[i].thread_name, s , threadControlTable[i].threadCPUTime);
+
+		}
+	}
+
+}
+
+void switcher()
+{
+	int currentThread = executingThread;
+	runQueue = list_append_int(runQueue, currentThread);
+	executingThread = list_shift_int(runQueue);
+	//adjust threads states
+	threadControlTable[currentThread].state = RUNNABLE;
+	threadControlTable[executingThread].state = RUNNING;
+	
+	//compute CPU time
+	threadControlTable[currentThread].threadCPUTime += turnDuration;
+
+	//Check if the runqueue is empty
+	if(executingThread == 0)
+	{
+		printf("Thread Package Error: No more runnable threads.\n");
+		exit(EXIT_FAILURE);
+	}
+
+	//swap context
+	swapcontext(&threadControlTable[currentThread].context, &threadControlTable[executingThread].context);
+
+}
+
+char* toString(threadState s)
+{
+	//function that returns string from a state
+	switch(s)
+	{
+		case RUNNABLE : return "Runnable";
+		case RUNNING  : return "Running";
+		case WAIT  : return "Waiting";
+		case BLOCKED  : return "Blocked";
+		case EXIT : return "Exited";
+		default : return NULL;
+	}
+
+}
+
+void test()
+{
+	//semaphore_wait(sem1);
+
+	printf("beginning %d\n", threadControlTable[executingThread].thread_id);
+	int i = 0;
+	while(i<10000000) i++;
+	printf("%s (id %d) reached 10000\n", threadControlTable[executingThread].thread_name, threadControlTable[executingThread].thread_id);
+	while(i<20000000) i++;
+	printf("%s (id %d) reached 20000\n", threadControlTable[executingThread].thread_name, threadControlTable[executingThread].thread_id);
+
+	//semaphore_signal(sem1);
+	mythread_exit();
+}
+
+void test2()
+{
+	//semaphore_wait(sem2);
+
+	printf("beginning %d\n", threadControlTable[executingThread].thread_id);
+	int i = 0;
+	while(i<10000) i++;
+	printf("%s (id %d) reached 10000\n", threadControlTable[executingThread].thread_name, threadControlTable[executingThread].thread_id);
+	while(i<20000) i++;
+	printf("%s (id %d) reached 20000\n", threadControlTable[executingThread].thread_name, threadControlTable[executingThread].thread_id);
+	//semaphore_signal(sem2);
+	mythread_exit();
+}
+
+
+ int main()
+ {
+     printf("TESTING!\n");
+     mythread_init();
+
+ 	printf("%f\n", (double) clock());
+
+     sem1 = create_semaphore(0);
+
+     mythread_create("testA", &test, 16384);
+     mythread_state();
+     mythread_create("testB", &test2, 16384);
+ 	set_quantum_size(1000);
+     runthreads();
+     int i;
+     while(i<100000)i++;
+     mythread_state();
+     printf("DONE TESTING!\n");
+     mythread_state();
+     //while(1);
+     return 0;
+ }
+
+

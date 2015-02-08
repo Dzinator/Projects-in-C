@@ -1,0 +1,2 @@
+all:
+	gcc -o out threadPackage.c -Werror -Wall -g -DHAVE_PTHREAD_RWLOCK=1 -lslack

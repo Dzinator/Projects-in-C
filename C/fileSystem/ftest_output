@@ -1,0 +1,316 @@
+Two files created with zero length:
+
+---------------------------------
+  -[File Name]-	       -[Size]-
+---------------------------------
+
+   MZMNZRYX.KVG	              0
+   KODVGGGE.TCU	              0
+---------------------------------
+
+
+file: 0, chunksize: 4674
+
+---------------------------------
+  -[File Name]-	       -[Size]-
+---------------------------------
+
+   MZMNZRYX.KVG	              0
+   KODVGGGE.TCU	              0
+---------------------------------
+
+file: 0, chunksize: 2003
+
+---------------------------------
+  -[File Name]-	       -[Size]-
+---------------------------------
+
+   MZMNZRYX.KVG	           4674
+   KODVGGGE.TCU	              0
+---------------------------------
+
+file: 0, chunksize: 496
+
+---------------------------------
+  -[File Name]-	       -[Size]-
+---------------------------------
+
+   MZMNZRYX.KVG	           6677
+   KODVGGGE.TCU	              0
+---------------------------------
+
+file: 0, chunksize: 3686
+
+---------------------------------
+  -[File Name]-	       -[Size]-
+---------------------------------
+
+   MZMNZRYX.KVG	           7173
+   KODVGGGE.TCU	              0
+---------------------------------
+
+file: 0, chunksize: 343
+
+---------------------------------
+  -[File Name]-	       -[Size]-
+---------------------------------
+
+   MZMNZRYX.KVG	          10859
+   KODVGGGE.TCU	              0
+---------------------------------
+
+file: 0, chunksize: 28
+
+---------------------------------
+  -[File Name]-	       -[Size]-
+---------------------------------
+
+   MZMNZRYX.KVG	          11202
+   KODVGGGE.TCU	              0
+---------------------------------
+
+file: 0, chunksize: 66
+
+---------------------------------
+  -[File Name]-	       -[Size]-
+---------------------------------
+
+   MZMNZRYX.KVG	          11230
+   KODVGGGE.TCU	              0
+---------------------------------
+
+file: 0, chunksize: 8
+
+---------------------------------
+  -[File Name]-	       -[Size]-
+---------------------------------
+
+   MZMNZRYX.KVG	          11296
+   KODVGGGE.TCU	              0
+---------------------------------
+
+file: 0, chunksize: 17
+
+---------------------------------
+  -[File Name]-	       -[Size]-
+---------------------------------
+
+   MZMNZRYX.KVG	          11304
+   KODVGGGE.TCU	              0
+---------------------------------
+
+file: 0, chunksize: 22
+
+---------------------------------
+  -[File Name]-	       -[Size]-
+---------------------------------
+
+   MZMNZRYX.KVG	          11321
+   KODVGGGE.TCU	              0
+---------------------------------
+
+file: 0, chunksize: 21
+
+---------------------------------
+  -[File Name]-	       -[Size]-
+---------------------------------
+
+   MZMNZRYX.KVG	          11343
+   KODVGGGE.TCU	              0
+---------------------------------
+
+file: 1, chunksize: 23244
+
+---------------------------------
+  -[File Name]-	       -[Size]-
+---------------------------------
+
+   MZMNZRYX.KVG	          11364
+   KODVGGGE.TCU	              0
+---------------------------------
+
+file: 1, chunksize: 149
+
+---------------------------------
+  -[File Name]-	       -[Size]-
+---------------------------------
+
+   MZMNZRYX.KVG	          11364
+   KODVGGGE.TCU	          23244
+---------------------------------
+
+file: 1, chunksize: 1239
+
+---------------------------------
+  -[File Name]-	       -[Size]-
+---------------------------------
+
+   MZMNZRYX.KVG	          11364
+   KODVGGGE.TCU	          23393
+---------------------------------
+
+file: 1, chunksize: 126
+
+---------------------------------
+  -[File Name]-	       -[Size]-
+---------------------------------
+
+   MZMNZRYX.KVG	          11364
+   KODVGGGE.TCU	          24632
+---------------------------------
+
+file: 1, chunksize: 5
+
+---------------------------------
+  -[File Name]-	       -[Size]-
+---------------------------------
+
+   MZMNZRYX.KVG	          11364
+   KODVGGGE.TCU	          24758
+---------------------------------
+
+File MZMNZRYX.KVG now has length 11364 and KODVGGGE.TCU now has length 24763:
+
+---------------------------------
+  -[File Name]-	       -[Size]-
+---------------------------------
+
+   MZMNZRYX.KVG	          11364
+   KODVGGGE.TCU	          24763
+---------------------------------
+
+before doing reads
+
+before sfs_read
+
+After sfs_read
+
+After doing reads 0
+
+before sfs_read
+
+After sfs_read
+
+After doing reads 0
+
+before sfs_read
+
+After sfs_read
+
+After doing reads 0
+
+before sfs_read
+
+After sfs_read
+
+After doing reads 0
+
+before sfs_read
+
+After sfs_read
+
+After doing reads 0
+
+before sfs_read
+
+After sfs_read
+
+After doing reads 0
+
+before sfs_read
+
+After sfs_read
+
+After doing reads 0
+
+before sfs_read
+
+After sfs_read
+
+After doing reads 1
+
+before sfs_read
+
+After sfs_read
+
+After doing reads 1
+
+before sfs_read
+
+After sfs_read
+
+After doing reads 1
+
+before sfs_read
+
+After sfs_read
+
+After doing reads 1
+
+before sfs_read
+
+After sfs_read
+
+After doing reads 1
+
+before sfs_read
+
+After sfs_read
+
+After doing reads 1
+
+before sfs_read
+
+After sfs_read
+
+After doing reads 1
+
+before sfs_read
+
+After sfs_read
+
+After doing reads 1
+
+before sfs_read
+
+After sfs_read
+
+After doing reads 1
+
+before sfs_read
+
+After sfs_read
+
+After doing reads 1
+
+before sfs_read
+
+After sfs_read
+
+After doing reads 1
+
+After doing reads
+
+After deleting file MZMNZRYX.KVG:
+
+---------------------------------
+  -[File Name]-	       -[Size]-
+---------------------------------
+
+   KODVGGGE.TCU	          24763
+---------------------------------
+
+After deleting file KODVGGGE.TCU:
+
+---------------------------------
+  -[File Name]-	       -[Size]-
+---------------------------------
+
+---------------------------------
+
+Created 100 files in the root directory
+Simultaneously opened 100 files
+Tests sfs_fseek
+Test program exiting with 0 errors
+
+
